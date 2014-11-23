@@ -54,6 +54,10 @@ def solved_history(name)
   end
 end
 
+File.open("/home/hibiki/hibiki.pid", "w") do |f|
+  f.puts(Process.pid)
+end
+
 set :views, "templates"
 set :static, true
 set :public_folder, "static"

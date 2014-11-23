@@ -2,12 +2,23 @@ GEM
   remote: https://rubygems.org/
   specs:
     backports (3.6.4)
+    capistrano (3.2.1)
+      i18n
+      rake (>= 10.0.0)
+      sshkit (~> 1.3)
+    chronic (0.10.2)
+    colorize (0.7.3)
+    i18n (0.6.11)
     multi_json (1.10.1)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.9.1)
     rack (1.5.2)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
+    rake (10.3.2)
     redis (3.1.0)
     sinatra (1.4.5)
       rack (~> 1.4)
@@ -23,14 +34,22 @@ GEM
     slim (2.1.0)
       temple (~> 0.6.9)
       tilt (>= 1.3.3, < 2.1)
+    sshkit (1.5.1)
+      colorize
+      net-scp (>= 1.1.2)
+      net-ssh (>= 2.8.0)
     temple (0.6.10)
     tilt (1.4.1)
+    whenever (0.9.4)
+      chronic (>= 0.6.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  capistrano
   redis
   sinatra
   sinatra-contrib
   slim
+  whenever

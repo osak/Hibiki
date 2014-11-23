@@ -1,0 +1,56 @@
+html
+  head
+    title Hibiki
+    script rel="javascript" src="jquery.min.js"
+    script rel="javascript" src="highcharts.js"
+  body
+    h1 Hibiki
+    h2 = "#{@s1.user_id} vs. #{@s2.user_id}"
+    div#container
+    javascript:
+      $(function () { 
+          $.getJSON('diff', function(data) {
+            $('#container').highcharts({
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: 'Diff'
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Diff'
+                    }
+                },
+                series: [
+                  {name: data[0].user_id, data: data[0].data},
+                  {name: data[1].user_id, data: data[1].data}
+                ]
+            });
+        });
+      });
+
+
+    - diff = @s1.solved - @s2.solved
+    p = "Only #{@s1.user_id} solved: (#{diff.size} problems)"
+    table
+      - diff.to_a.sort.each_slice(10) do |slice|
+        tr
+          - slice.each do |s|
+            - id = s.to_s.rjust(4, "0")
+            td
+              a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=#{id}" = id
+
+    - diff = @s2.solved - @s1.solved
+    p = "Only #{@s2.user_id} solved: (#{diff.size} problems)"
+    table
+      - diff.to_a.sort.each_slice(10) do |slice|
+        tr
+          - slice.each do |s|
+            - id = s.to_s.rjust(4, "0")
+            td
+              a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=#{id}" = id

@@ -58,6 +58,7 @@ Dir.chdir(Dir.home)
 File.open("hibiki.pid", "w") do |f|
   f.puts(Process.pid)
 end
+Process.daemon
 
 set :views, "templates"
 set :static, true

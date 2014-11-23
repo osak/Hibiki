@@ -54,7 +54,8 @@ def solved_history(name)
   end
 end
 
-File.open("/home/hibiki/hibiki.pid", "w") do |f|
+Dir.cd(Dir.home)
+File.open("hibiki.pid", "w") do |f|
   f.puts(Process.pid)
 end
 

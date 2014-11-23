@@ -55,11 +55,11 @@ def solved_history(name)
 end
 
 Process.daemon
-Dir.chdir(Dir.home)
-File.open("hibiki.pid", "w") do |f|
+File.open(File.expand_path("~/hibiki.pid"), "w") do |f|
   f.puts(Process.pid)
 end
 
+Dir.chdir(__dir__)
 set :views, "templates"
 set :static, true
 set :public_folder, "static"

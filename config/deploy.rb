@@ -34,13 +34,17 @@ set :deploy_to, '/var/www/Hibiki'
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
+set :whenever_roles, ->{:app}
+set :whenever_identifier, ->{"#{fetch(:application)}_#{fetch(:stage)}"}
+
 namespace :deploy do
 
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
-      run "kill $(cat /home/hibiki/hibiki.pid)"
-      run "ruby server.rb"
+      execute "kill $(cat /home/hibiki/hibiki.pid); true"
+      sleep 10 # to wait surely killed
+      execute "cd #{current_path}; bundle exec ruby2.0 #{File.join(current_path, "server.rb")}"
     end
   end
 
@@ -48,10 +52,6 @@ namespace :deploy do
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
-      # Here we can do anything such as:
-      # within release_path do
-      #   execute :rake, 'cache:clear'
-      # end
     end
   end
 

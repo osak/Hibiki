@@ -67,10 +67,10 @@ def generate_diff_array(h1, h2)
   data = []
   h2_idx = 0
   h1.each do |s1|
-    while h2_idx < h2.size && h2[h2_idx] < s1
+    while h2_idx < h2.size && h2[h2_idx] <= s1
       h2_idx += 1
     end
-    break if h2_idx >= h2.size
+    h2_idx -= 1
     s2 = h2[h2_idx]
     date = Time.new(s1.date.year, s1.date.month, s1.date.day)
     data << [date.to_i * 1000, (s2.solved - s1.solved).size]

@@ -15,13 +15,7 @@ class SolvedStat
   end
 
   def daycmp(t1, t2)
-    if t1.year != t2.year
-      t1.year <=> t2.year
-    elsif t1.month != t2.month
-      t1.month <=> t2.month
-    else
-      t1.day <=> t2.day
-    end
+    [t1.year, t1.month, t1.day] <=> [t2.year, t2.month, t2.day]
   end
 
   def <=>(ss)

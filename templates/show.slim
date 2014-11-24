@@ -9,6 +9,11 @@ html
     div#container
     javascript:
       $(function () { 
+          Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+          });
           $.getJSON('diff', function(data) {
             $('#container').highcharts({
                 chart: {
@@ -18,7 +23,8 @@ html
                     text: 'Diff'
                 },
                 xAxis: {
-                    type: 'datetime'
+                  type: 'datetime',
+                  minTickInterval: 3600 * 24 * 1000
                 },
                 yAxis: {
                     min: 0,

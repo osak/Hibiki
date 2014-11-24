@@ -14,7 +14,7 @@ class DB
 
   def solved_history(name, t)
     res = @redis.zrangebyscore(name, 0, t, with_scores: true)
-    res.map{|a,b| {user_id: name, id: a.to_i, time: Time.at(b.to_i)}}
+    res.map{|a,b| {user_id: name, id: a.to_i, time: Time.at(b.to_i / 1000)}}
   end
 
   private

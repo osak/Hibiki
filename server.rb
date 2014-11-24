@@ -38,12 +38,12 @@ def generate_diff_array(u1, h1, u2, h2)
       solved << h[:id]
       if diff.include?(h[:id])
         diff.delete(h[:id])
-        data << [h[:time].to_i, diff.size]
+        data << [h[:time].to_i * 1000, diff.size]
       end
     elsif h[:user_id] == u2
       unless solved.include?(h[:id])
         diff << h[:id]
-        data << [h[:time].to_i, diff.size]
+        data << [h[:time].to_i * 1000, diff.size]
       end
     end
   end

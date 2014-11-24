@@ -26,16 +26,20 @@ get '/show' do
 end
 
 def generate_diff_array(h1, h2)
+  ts = (h1 + h2).map(&:date).sort.uniq
   data = []
+  h1_idx = 0
   h2_idx = 0
-  h1.each do |s1|
-    while h2_idx < h2.size && h2[h2_idx] <= s1
+  ts.each do |t|
+    while h1_idx < h1.size && h1[h1_idx].date <= t
+      h1_idx += 1
+    end
+    h1_idx -= 1
+    while h2_idx < h2.size && h2[h2_idx].date <= t
       h2_idx += 1
     end
     h2_idx -= 1
-    s2 = h2[h2_idx]
-    date = Time.new(s1.date.year, s1.date.month, s1.date.day)
-    data << [date.to_i * 1000, (s2.solved - s1.solved).size]
+    data << [t.to_i * 1000, (h2[h2_idx].solved - h1[h1_idx].solved).size]
   end
   data
 end

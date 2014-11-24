@@ -2,7 +2,10 @@ require 'net/http'
 require 'rexml/document'
 
 class AOJ
-  API = "http://judge.u-aizu.ac.jp/onlinejudge/webservice"
+  API_HOST = "judge.u-aizu.ac.jp"
+  API_PORT = 80
+  API = "http://#{API_HOST}/onlinejudge/webservice"
+  USER_AGENT = "Hibiki (http://hibiki.osak.jp) Crawler. Contact: Osamu Koga<osak.63@gmail.com>"
 
   def parse(node)
     if node.has_elements?
@@ -26,8 +29,12 @@ class AOJ
 
   def get(kind, *param)
     uri = URI("#{API}/#{kind}?#{param.first.map{|k,v| "#{k}=#{v}"}.join("&")}")
-    response = Net::HTTP.get(uri)
-    doc = REXML::Document.new(response)
+    req = Net::HTTP::Get.new(uri)
+    req["User-Agent"] = USER_AGENT
+    response = Net::HTTP.start(API_HOST, API_PORT) do |http|
+      http.request(req)
+    end
+    doc = REXML::Document.new(response.body)
     parse(doc)
   end
 

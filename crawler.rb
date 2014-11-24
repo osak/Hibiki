@@ -1,24 +1,17 @@
 require_relative 'aoj_api'
+require_relative 'db'
 require 'pp'
-require 'redis'
 
 class Crawler
   def initialize
-    @redis = Redis.new
+    @db = DB.new
     @aoj = AOJ.new
-  end
-
-  def dict_for(name)
-    "dict:#{name}"
   end
 
   def crawl_user(name)
     solved = @aoj.solved_record(name)
     solved_ids = solved[:solved_record_list][:solved].map{|s| s[:problem_id].to_i}
-    cur_time = Time.now.to_i
-    key = "#{name}:#{cur_time}"
-    @redis.sadd(key, solved_ids)
-    @redis.zadd(dict_for(name), cur_time, key)
+    @db.add_solved(name, solved_ids, Time.now)
   end
 
   def crawl

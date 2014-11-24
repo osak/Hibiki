@@ -38,7 +38,14 @@ class AOJ
     parse(doc)
   end
 
-  def solved_record(user_id)
-    get("solved_record", user_id: user_id, date_begin: 0)
+  def solved_record(user_id, date_begin = 0)
+    res = get("solved_record", user_id: user_id, date_begin: date_begin)
+    l = res[:solved_record_list]
+    if l.is_a?(Hash)
+      unless l[:solved].is_a?(Array)
+        l[:solved] = [l[:solved]]
+      end
+    end
+    res
   end
 end

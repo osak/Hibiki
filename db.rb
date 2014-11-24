@@ -17,6 +17,16 @@ class DB
     res.map{|a,b| {user_id: name, id: a.to_i, time: Time.at(b.to_i / 1000)}}
   end
 
+  def latest_solved(name)
+    res = @redis.zrange(name, -1, -1, with_scores: true)
+    if res.size > 0
+      res = res.first
+      {user_id: name, id: res[0].to_i, time: Time.at(res[1].to_i / 1000)}
+    else
+      nil
+    end
+  end
+
   private
   def timestamp(t = Time.now)
     t.strftime("%Y-%m-%d")

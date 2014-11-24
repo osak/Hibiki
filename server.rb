@@ -1,4 +1,5 @@
 require_relative 'db'
+require_relative 'aoj_api'
 require 'sinatra'
 require 'sinatra/json'
 require 'slim'
@@ -8,6 +9,24 @@ require 'uri'
 
 def db
   @db ||= DB.new
+end
+
+def aoj
+  @aoj ||= AOJ.new
+end
+
+def update(name)
+  latest = db.latest_solved(name)
+  date_begin = 0
+  if latest
+    date_begin = latest[:time].to_i * 1000 + 1000
+  end
+  res = aoj.solved_record(name, date_begin)
+  l = res[:solved_record_list]
+  if l.is_a?(Hash)
+    entries = l[:solved].map{|s| [s[:date].to_i, s[:problem_id].to_i]}
+    @db.add_solved(name, entries)
+  end
 end
 
 Process.daemon
@@ -23,6 +42,8 @@ set :public_folder, "static"
 get '/show' do
   @user1 = request["user1"]
   @user2 = request["user2"]
+  update(@user1)
+  update(@user2)
   @s1 = Set[*db.solved_history(@user1, Time.now.to_i * 1000).map{|s| s[:id]}]
   @s2 = Set[*db.solved_history(@user2, Time.now.to_i * 1000).map{|s| s[:id]}]
   slim :show

@@ -49,7 +49,7 @@ html
           - slice.each do |s|
             - id = s.to_s.rjust(4, "0")
             td
-              a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=#{id}" = id
+              a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=#{id}" target="_blank" = id
 
     - diff = @s2 - @s1
     p = "Only #{@user2} solved: (#{diff.size} problems)"
@@ -59,4 +59,4 @@ html
           - slice.each do |s|
             - id = s.to_s.rjust(4, "0")
             td
-              a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=#{id}" = id
+              a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=#{id}" target="_blank" = id

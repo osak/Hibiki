@@ -5,7 +5,12 @@ html
     script rel="javascript" src="highcharts.js"
   body
     h1 Hibiki
-    h2 = "#{@user1} vs. #{@user2}"
+    form action="show" method="get"
+      h2
+        input name="user1" type="textfield" value="#{@user1}"
+        | vs.
+        input name="user2" type="textfield" value="#{@user2}"
+        input type="submit" value="Show"
     div#container
     javascript:
       $(function () { 
@@ -20,7 +25,7 @@ html
                     type: 'line'
                 },
                 title: {
-                    text: 'Diff'
+                  text: '#{@user1} vs. #{@user2}'
                 },
                 xAxis: {
                   type: 'datetime',

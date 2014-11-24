@@ -7,10 +7,9 @@ class DB
     @redis = Redis.new
   end
 
-  def add_solved(name, ids, time)
-    key = "#{name}:#{timestamp(time)}"
-    @redis.sadd(key, ids)
-    @redis.zadd(dictname(name), numerical_timestamp(time), key)
+  def add_solved(name, entries)
+    key = name
+    @redis.zadd(name, entries.flatten)
   end
 
   def recent_solved(name)

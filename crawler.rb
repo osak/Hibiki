@@ -10,8 +10,8 @@ class Crawler
 
   def crawl_user(name)
     solved = @aoj.solved_record(name)
-    solved_ids = solved[:solved_record_list][:solved].map{|s| s[:problem_id].to_i}
-    @db.add_solved(name, solved_ids, Time.now)
+    entries = solved[:solved_record_list][:solved].map{|s| [s[:date].to_i, s[:problem_id].to_i]}
+    @db.add_solved(name, entries)
   end
 
   def crawl

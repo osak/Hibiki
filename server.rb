@@ -4,6 +4,7 @@ require 'sinatra/json'
 require 'slim'
 require 'set'
 require 'pp'
+require 'uri'
 
 def db
   @db ||= DB.new
@@ -20,8 +21,8 @@ set :static, true
 set :public_folder, "static"
 
 get '/show' do
-  @user1 = "osa_k"
-  @user2 = "Mi_Sawa"
+  @user1 = request["user1"]
+  @user2 = request["user2"]
   @s1 = Set[*db.solved_history(@user1, Time.now.to_i * 1000).map{|s| s[:id]}]
   @s2 = Set[*db.solved_history(@user2, Time.now.to_i * 1000).map{|s| s[:id]}]
   slim :show
@@ -50,8 +51,8 @@ def generate_diff_array(u1, h1, u2, h2)
 end
 
 get '/diff' do
-  u1 = "osa_k"
-  u2 = "Mi_Sawa"
+  u1 = request["user1"]
+  u2 = request["user2"]
   h1 = db.solved_history(u1, Time.now.to_i * 1000)
   h2 = db.solved_history(u2, Time.now.to_i * 1000)
   data = []

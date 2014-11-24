@@ -14,7 +14,7 @@ html
                 useUTC: false
             }
           });
-          $.getJSON('diff', function(data) {
+          $.getJSON('#{URI.escape("diff?user1=#{@user1}&user2=#{@user2}")}', function(data) {
             $('#container').highcharts({
                 chart: {
                     type: 'line'

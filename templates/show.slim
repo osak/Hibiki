@@ -5,7 +5,7 @@ html
     script rel="javascript" src="highcharts.js"
   body
     h1 Hibiki
-    h2 = "#{@s1.user_id} vs. #{@s2.user_id}"
+    h2 = "#{@user1} vs. #{@user2}"
     div#container
     javascript:
       $(function () { 
@@ -41,8 +41,8 @@ html
       });
 
 
-    - diff = @s1.solved - @s2.solved
-    p = "Only #{@s1.user_id} solved: (#{diff.size} problems)"
+    - diff = @s1 - @s2
+    p = "Only #{@user1} solved: (#{diff.size} problems)"
     table
       - diff.to_a.sort.each_slice(10) do |slice|
         tr
@@ -51,8 +51,8 @@ html
             td
               a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=#{id}" = id
 
-    - diff = @s2.solved - @s1.solved
-    p = "Only #{@s2.user_id} solved: (#{diff.size} problems)"
+    - diff = @s2 - @s1
+    p = "Only #{@user2} solved: (#{diff.size} problems)"
     table
       - diff.to_a.sort.each_slice(10) do |slice|
         tr

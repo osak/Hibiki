@@ -20,26 +20,31 @@ set :static, true
 set :public_folder, "static"
 
 get '/show' do
-  @s1 = db.recent_solved("osa_k")
-  @s2 = db.recent_solved("Mi_Sawa")
+  @user1 = "osa_k"
+  @user2 = "Mi_Sawa"
+  @s1 = Set[*db.solved_history(@user1, Time.now.to_i * 1000).map{|s| s[:id]}]
+  @s2 = Set[*db.solved_history(@user2, Time.now.to_i * 1000).map{|s| s[:id]}]
   slim :show
 end
 
-def generate_diff_array(h1, h2)
-  ts = (h1 + h2).map(&:date).sort.uniq
+def generate_diff_array(u1, h1, u2, h2)
+  all = (h1 + h2).sort_by{|h| h[:time]}
   data = []
-  h1_idx = 0
-  h2_idx = 0
-  ts.each do |t|
-    while h1_idx < h1.size && h1[h1_idx].date <= t
-      h1_idx += 1
+  diff = Set.new
+  solved = Set.new
+  all.each do |h|
+    if h[:user_id] == u1
+      solved << h[:id]
+      if diff.include?(h[:id])
+        diff.delete(h[:id])
+        data << [h[:time].to_i, diff.size]
+      end
+    elsif h[:user_id] == u2
+      unless solved.include?(h[:id])
+        diff << h[:id]
+        data << [h[:time].to_i, diff.size]
+      end
     end
-    h1_idx -= 1
-    while h2_idx < h2.size && h2[h2_idx].date <= t
-      h2_idx += 1
-    end
-    h2_idx -= 1
-    data << [t.to_i * 1000, (h2[h2_idx].solved - h1[h1_idx].solved).size]
   end
   data
 end
@@ -47,10 +52,10 @@ end
 get '/diff' do
   u1 = "osa_k"
   u2 = "Mi_Sawa"
-  h1 = db.solved_history(u1)
-  h2 = db.solved_history(u2)
+  h1 = db.solved_history(u1, Time.now.to_i * 1000)
+  h2 = db.solved_history(u2, Time.now.to_i * 1000)
   data = []
-  data << {user_id: u1, data: generate_diff_array(h1, h2)}
-  data << {user_id: u2, data: generate_diff_array(h2, h1)}
+  data << {user_id: u1, data: generate_diff_array(u1, h1, u2, h2)}
+  data << {user_id: u2, data: generate_diff_array(u2, h2, u1, h1)}
   json data
 end

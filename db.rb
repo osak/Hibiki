@@ -12,15 +12,9 @@ class DB
     @redis.zadd(name, entries.flatten)
   end
 
-  def recent_solved(name)
-    dict = dictname(name)
-    last_key = @redis.zrange(dict, -1, -1).first
-    solved_stat(name, last_key)
-  end
-
-  def solved_history(name)
-    key = @redis.zrange(dictname(name), 0, -1)
-    key.map{|k| solved_stat(name, k)}
+  def solved_history(name, t)
+    res = @redis.zrangebyscore(name, 0, t, with_scores: true)
+    res.map{|a,b| {user_id: name, id: a.to_i, time: Time.at(b.to_i)}}
   end
 
   private
